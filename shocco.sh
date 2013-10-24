@@ -68,6 +68,11 @@ PYGMENTIZE='@@PYGMENTIZE@@'
 MARKDOWN='@@MARKDOWN@@'
 RST2HTML='@@RST2HTML@@'
 
+fatal () {
+    echo "$(basename $0): $*" 1>&2
+    exit 1
+}
+
 processor="$MARKDOWN"
 debug=
 strict=
@@ -109,8 +114,7 @@ then
     then
         processor="$processor $strict"
     else
-        echo "$(basename $0): --strict is only valid with --rst" 1>&2
-        exit 1
+        fatal "--strict is only valid with --rst"
     fi
 fi
 
@@ -134,8 +138,7 @@ command -v "$MARKDOWN" >/dev/null || {
     then alias markdown='Markdown.pl'
     elif test -f "$(dirname $0)/Markdown.pl"
     then alias markdown="perl $(dirname $0)/Markdown.pl"
-    else echo "$(basename $0): markdown command not found." 1>&2
-         exit 1
+    else fatal "markdown command not found."
     fi
 }
 
@@ -146,10 +149,8 @@ command -v "$MARKDOWN" >/dev/null || {
 # now, just bail out if we can't find the `pygmentize` program.
 #
 # [py]: http://pygments.org/
-command -v "$PYGMENTIZE" >/dev/null || {
-    echo "$(basename $0): pygmentize command not found." 1>&2
-    exit 1
-}
+command -v "$PYGMENTIZE" >/dev/null || \
+    fatal "pygmentize command not found."
 
 # Work and Cleanup
 # ----------------
@@ -174,10 +175,8 @@ command -v "$PYGMENTIZE" >/dev/null || {
 
 # We want to be absolutely sure we're not going to do something stupid like
 # use `.` or `/` as a work dir. Better safe than sorry.
-test -z "$WORK" -o "$WORK" = '/' && {
-    echo "$(basename $0): could not create a temp work dir."
-    exit 1
-}
+test -z "$WORK" -o "$WORK" = '/' && \
+    fatal "could not create a temp work dir."
 
 # We're about to create a ton of shit under our `$WORK` directory. Register
 # an `EXIT` trap that cleans everything up. This guarantees we don't leave
