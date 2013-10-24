@@ -51,6 +51,7 @@ set -e
 #/ Options:
 #/   -t,--title <title>  Specify a custom title (defaults to filename)
 #/   -r,--rst            Treat comments as reStructuredText not Markdown
+#/   -s,--strict         Fail if warnings are encountered (only with -r)
 #/   -d,--debug          Don't delete temporary files on exit
 #/   -h,--help           Show this usage text
 
@@ -69,6 +70,7 @@ RST2HTML='@@RST2HTML@@'
 
 processor="$MARKDOWN"
 debug=
+strict=
 
 while test $# -gt 0
 do
@@ -81,6 +83,9 @@ do
             shift; shift ;;
         -r|--rst)
             processor="$RST2HTML"
+            shift ;;
+        -s|--strict)
+            strict=--halt=warning
             shift ;;
         -d|--debug)
             debug=yes
@@ -96,6 +101,17 @@ then
     echo 1>&2
     usage 1>&2
     exit 1
+fi
+
+if test -n "$strict"
+then
+    if test "$processor" = "$RST2HTML"
+    then
+        processor="$processor $strict"
+    else
+        echo "$(basename $0): --strict is only valid with --rst" 1>&2
+        exit 1
+    fi
 fi
 
 # Next argument should be the `<source>` file. Grab it, and use its basename
