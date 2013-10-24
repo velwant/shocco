@@ -51,6 +51,7 @@ set -e
 #/ Options:
 #/   -t,--title <title>  Specify a custom title (defaults to filename)
 #/   -r,--rst            Treat comments as reStructuredText not Markdown
+#/   -d,--debug          Don't delete temporary files on exit
 #/   -h,--help           Show this usage text
 
 # This is the second part of the usage message technique: `grep` yourself
@@ -67,6 +68,7 @@ MARKDOWN='@@MARKDOWN@@'
 RST2HTML='@@RST2HTML@@'
 
 processor="$MARKDOWN"
+debug=
 
 while test $# -gt 0
 do
@@ -79,6 +81,9 @@ do
             shift; shift ;;
         -r|--rst)
             processor="$RST2HTML"
+            shift ;;
+        -d|--debug)
+            debug=yes
             shift ;;
         *)
             break ;;
@@ -161,7 +166,12 @@ test -z "$WORK" -o "$WORK" = '/' && {
 # We're about to create a ton of shit under our `$WORK` directory. Register
 # an `EXIT` trap that cleans everything up. This guarantees we don't leave
 # anything hanging around unless we're killed with a `SIGKILL`.
-trap "rm -rf $WORK" 0
+if test -z "$debug"
+then
+    trap "rm -rf $WORK" 0
+else
+    trap "echo >&2 Temporary files left in $WORK" 0
+fi
 
 # Preformatting
 # -------------
