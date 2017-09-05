@@ -52,6 +52,7 @@ set -e
 #/   -t,--title <title>  Specify a custom title (defaults to filename)
 #/   -r,--rst            Treat comments as reStructuredText not Markdown
 #/   -c,--css            Css url or style name for default
+#/   -d,--debug          In debug mode isn't removed temporary dir
 #/   -h,--help           Show this usage text
 
 # This is the second part of the usage message technique: `grep` yourself
@@ -81,6 +82,9 @@ do
         -c|--css)
             cssurl="$2"
             shift; shift ;;
+        -d|--debug)
+            DEBUG="1"
+            shift ;;
         -r|--rst)
             processor="$RST2HTML"
             shift ;;
@@ -168,7 +172,7 @@ test -z "$WORK" -o "$WORK" = '/' && {
 # We're about to create a ton of shit under our `$WORK` directory. Register
 # an `EXIT` trap that cleans everything up. This guarantees we don't leave
 # anything hanging around unless we're killed with a `SIGKILL`.
-trap "rm -rf $WORK" 0
+[ -z ${DEBUG} ] && trap "rm -rf $WORK" 0 || trap "echo $WORK >> /dev/stderr" 0
 
 # Preformatting
 # -------------
