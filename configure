@@ -192,18 +192,13 @@ else stdutil xdg-open   XDG_OPEN   xdg-open
      reconf BROWSER "${XDG_OPEN:-$FIREFOX}"
 fi
 
-stdutil ronn       RONN       ronn $RONN
 stdutil markdown   MARKDOWN   markdown Markdown.pl $MARKDOWN
-stdutil perl       PERL       perl
 stdutil pygmentize PYGMENTIZE pygmentize $PYGMENTIZE
 stdutil rst2html   RST2HTML   rst2html rst2html.py
 
 set -e
 
 eval "$SHCONFIG"
-
-test -z "$RONN" &&
-    warn "warn: ronn is not installed. cannot rebuild manpages. no biggie."
 
 test -z "$MARKDOWN" && {
      warn "warn: no markdown found on PATH. installing Gruber's with shocco."
