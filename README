@@ -10,25 +10,24 @@
     style documentation generator for / in POSIX shell.
     See the shocco generated docs for more information:
 
-         <http://rtomayko.github.com/shocco/>
+         <https://github.com/velwant/shocco/>
 
+         original repository with help page:
+
+         <http://rtomayko.github.com/shocco/>
 
                      I N S T A L L
 
-
-  (  git clone git://github.com/rtomayko/shocco.git &&
-     cd shocco    &&      make      &&    make install  )
+    (  git clone https://github.com/velwant/shocco &&
+     cd shocco   &&     make     &&    make install  )
 
 
                          R U N
 
-
                       shocco --help
     shocco yourgreatscript.sh > yourgreatscript.sh.html
 
-
                         M O R E
-
 
                          Docco
          <http://jashkenas.github.com/docco/>
