@@ -1,9 +1,9 @@
 # Example of user css style
-body { font-family: sans-serif; width: 1024px !important; }
-div.container { width: 1024px !important; }
-div.background { width: 1024px !important; }
-table { width: 1024px; }
-td { vertical-align: top; width: 512px !important ; }
+body { font-family: sans-serif; }
+div.docs { width: 49% !important; vertical-align: top; display: inline-block; float: left; }
+div.code { width: 49% !important; float: right; }
+div.break { width: 100% !important; clear: both; }
+div p { margin-top: 0em; }
 h2, h3, h4, h5, h6 {
     margin-top: 0px;
     margin-left: 1em;

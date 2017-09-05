@@ -447,17 +447,8 @@ ${csscode}
 <body>
 <div id=container>
     <div id=background></div>
-    <table cellspacing=0 cellpadding=0>
-    <thead>
-      <tr>
-        <th class=docs><h1>$1</h1></th>
-        <th class=code></th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr><td class='docs'>$(cat)</td><td class='code'></td></tr>
-    </tbody>
-    </table>
+        <div class=header><h1>$1</h1></div>
+        <div class=docs>$(cat)</div>
 </div>
 </body>
 </html>
@@ -524,9 +515,9 @@ xargs cat                                    |
 # so that the CSS kicks in properly.
 {
     DOCSDIVIDER='<p><strong>DIVIDER</strong></p>'
-    DOCSREPLACE='</pre></div></td></tr><tr><td class=docs>'
+    DOCSREPLACE='</pre></div><div class=break></div><div class=docs>'
     CODEDIVIDER='<span class="c[1|a-zA-Z]*"># DIVIDER</span>'
-    CODEREPLACE='</td><td class=code><div class=highlight><pre>'
+    CODEREPLACE='</div><div class=code><pre>'
     sed "
         s@${DOCSDIVIDER}@${DOCSREPLACE}@
         s@${CODEDIVIDER}@${CODEREPLACE}@
