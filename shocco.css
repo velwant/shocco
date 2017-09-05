@@ -1,0 +1,14 @@
+# Example of user css style
+body { font-family: sans-serif; width: 1024px !important; }
+div.container { width: 1024px !important; }
+div.background { width: 1024px !important; }
+table { width: 1024px; }
+td { vertical-align: top; width: 512px !important ; }
+h2, h3, h4, h5, h6 {
+    margin-top: 0px;
+    margin-left: 1em;
+    font-family: sans-serif;
+    text-transform: none;
+    border-top-left-radius: 2%;
+    background: linear-gradient(to bottom right, #000000 -150%, #ffffff 50%);
+    }

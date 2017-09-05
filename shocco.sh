@@ -51,6 +51,7 @@ set -e
 #/ Options:
 #/   -t,--title <title>  Specify a custom title (defaults to filename)
 #/   -r,--rst            Treat comments as reStructuredText not Markdown
+#/   -c,--css            Css url or style name for default
 #/   -h,--help           Show this usage text
 
 # This is the second part of the usage message technique: `grep` yourself
@@ -77,6 +78,9 @@ do
         -t|--title)
             title="$2"
             shift; shift ;;
+        -c|--css)
+            cssurl="$2"
+            shift; shift ;;
         -r|--rst)
             processor="$RST2HTML"
             shift ;;
@@ -97,6 +101,9 @@ fi
 # as the title if none was given with the `-t` option.
 file="$1"
 : ${title:=$(basename "$file")}
+
+# `WORKDIR` is based dir path for relative addressed CSS stylesheets
+: ${WORKDIR:=$(pwd)}
 
 # On GNU systems, csplit doesn't elide empty files by default:
 CSPLITARGS=$( (csplit --version 2>/dev/null | grep -i gnu >/dev/null) && echo "--elide-empty-files" || true )
@@ -369,6 +376,55 @@ sed '
 # Create a function for apply the standard [Docco][do] HTML layout, using
 # [jashkenas][ja]'s gorgeous CSS for styles. Wrapping the layout in a function
 # lets us apply it elsewhere simply by piping in a body.
+# Layout function if template for target HTML layout.
+csscode="""
+# CSS for all
+body { font-family: sans-serif; }
+"""
+for i in ${cssurl}
+do
+    case $i in
+    # Original version shocco used only classic CSS for [Docco][do],
+    # from [jashkenas][ja]'s repository. But now can select from
+    #
+    # * [classic] (default)
+    # * [linear]
+    # * [parallel]
+    classic|linear|parallel)
+        css="http://jashkenas.github.io/docco/resources/$i/docco.css"
+        ;;
+# You can select any style for pygmentize by name of style colorize:
+#     pygmentize -L
+# In example:
+#     schocco --css "linear vim ./shocco.ccs http://example.com/style.css" …
+    manni|igor|lovelace|xcode|vim|\
+    autum|abap|vs|rrt|native|perldoc|\
+    borland|tango|emacs|friendly|\
+    monokai|paraiso-dark|colorful|\
+    murphy|bw|pastie|rainbow_dash|\
+    algol_nu|paraiso-light|trac|default|algol|fruity)
+        csscode="$csscode$(${PYGMENTIZE} -S $i -f html)"
+        ;;
+# You use a style own provenience too…
+# … as HTTP link to stylesheet, or …
+    http*) csscode="""$csscode@import url($i);
+    """
+        ;;
+# … include content from external CSS stylesheets.
+    *) case "${i}" in
+            /*) if [ -f "${i}" ] ; then
+                    csscode="$csscode$(cat ${i})"
+                fi
+            ;;
+            *)  if [ -f "${WORKDIR}/${i}" ] ; then
+                    csscode="$csscode$(cat ${WORKDIR}/${i})"
+                else echo "Unknown css parameter ${i}" >> /dev/stderr
+                fi
+            ;;
+        esac
+        ;;
+    esac
+done
 #
 # [ja]: http://github.com/jashkenas/
 # [do]: http://jashkenas.github.com/docco/
@@ -379,8 +435,11 @@ layout () {
 <head>
     <meta http-equiv='content-type' content='text/html;charset=utf-8'>
     <title>$1</title>
-    <link rel=stylesheet href="http://jashkenas.github.io/docco/resources/linear/docco.css">
-</head>
+    <link rel=stylesheet href="${css}">
+    <style>
+${csscode}
+    </style>
+    </head>
 <body>
 <div id=container>
     <div id=background></div>
