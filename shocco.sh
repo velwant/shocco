@@ -400,7 +400,7 @@ do
 # You can select any style for pygmentize by name of style colorize:
 #     pygmentize -L
 # In example:
-#     schocco --css "linear vim ./shocco.ccs http://example.com/style.css" …
+#     schocco --css "linear vim ./shocco.ccs http://example.com/style.css"
     manni|igor|lovelace|xcode|vim|\
     autum|abap|vs|rrt|native|perldoc|\
     borland|tango|emacs|friendly|\
@@ -409,19 +409,20 @@ do
     algol_nu|paraiso-light|trac|default|algol|fruity)
         csscode="$csscode$(${PYGMENTIZE} -S $i -f html)"
         ;;
-# You use a style own provenience too…
-# … as HTTP link to stylesheet, or …
+# You use a style own provenience too
+# as HTTP link to stylesheet, or
     http*) csscode="""$csscode@import url($i);
     """
         ;;
-# … include content from external CSS stylesheets.
+# include content from external CSS stylesheets.
     *) case "${i}" in
             /*) if [ -f "${i}" ] ; then
                     csscode="$csscode$(cat ${i})"
                 fi
             ;;
             *)  if [ -f "${WORKDIR}/${i}" ] ; then
-                    csscode="$csscode$(cat ${WORKDIR}/${i})"
+                    stylesheet=$(cat "${WORKDIR}/${i}")
+                    csscode="$csscode$stylesheet"
                 else echo "Unknown css parameter ${i}" >> /dev/stderr
                 fi
             ;;
