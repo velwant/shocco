@@ -6,11 +6,11 @@
 # `shocco(1)` reads shell scripts and produces annotated source documentation
 # in HTML format. Comments are formatted with Markdown and presented
 # alongside syntax highlighted code so as to give an annotation effect. This
-# page is the result of running `shocco` against [its own source file][sh].
+# page is by default the result of running `shocco` against [its own source file][so].
 #
 # shocco is built with `make(1)` and installs under `/usr/local` by default:
 #
-#     git clone git://github.com/rtomayko/shocco.git
+#     git clone git://github.com/velwant/shocco.git
 #     cd shocco
 #     make
 #     sudo make install
@@ -25,6 +25,7 @@
 #
 # [do]: http://jashkenas.github.com/docco/
 # [sh]: https://github.com/rtomayko/shocco/blob/master/shocco.sh#commit
+# [so]: https://github.com/velwant/shocco/blob/master/shocco.sh#commit
 
 # Usage and Prerequisites
 # -----------------------
@@ -376,32 +377,60 @@ sed '
 
 # HTML Template
 # -------------
-
+#
 # Create a function for apply the standard [Docco][do] HTML layout, using
 # [jashkenas][ja]'s gorgeous CSS for styles. Wrapping the layout in a function
 # lets us apply it elsewhere simply by piping in a body.
 # Layout function if template for target HTML layout.
+#
+# Original version shocco used only classic CSS for [Docco][do],
+# from [jashkenas][ja]'s repository.
+#
+# Now you can select from original sylesheets:
+#
+# * classic
+# * linear
+# * parallel
+#
+#
+#     ~$ shocco --css "linear"
+#
+# Or use stylesheet own provenience from net by URL
+#
+#     ~$ shocco --css "http://example.com/style.css"
+#
+# Or include content from local stylesheet:
+#
+#     ~$ shocco --css "./shocco.ccs"
+#
+# And select by name any color style for pygmentize. See list supported
+# styles in code (`pygmentize -L`)
+#
+# It is example, as do include CSS code for `emacs` scheme:
+#
+#     ~$ shocco --css "emacs"
+#
+# This page is by default generated as linear scheme without CSS styles.
+# But using CSS from file `shocco.css`, you can do parallel layout.
+# For example see index page [git repository][vw]. It was generated as:
+#
+#     ~$ shocco --css "./shocco.css emacs" ./shocco.sh > index.html
+#
+# [ja]: http://github.com/jashkenas/
+# [do]: http://jashkenas.github.com/docco/
+# [vw]: http://git.thewoodcraft.org/shocco/
 csscode="""
-# CSS for all
+#/ CSS for all
 body { font-family: sans-serif; }
 """
 for i in ${cssurl}
 do
     case $i in
-    # Original version shocco used only classic CSS for [Docco][do],
-    # from [jashkenas][ja]'s repository. But now can select from
-    #
-    # * [classic] (default)
-    # * [linear]
-    # * [parallel]
     classic|linear|parallel)
-        css="http://jashkenas.github.io/docco/resources/$i/docco.css"
+        csscode="""$csscode@import url('http://jashkenas.github.io/docco/resources/$i/docco.css');
+    """
         ;;
-# You can select any style for pygmentize by name of style colorize:
-#     pygmentize -L
-# In example:
-#     schocco --css "linear vim ./shocco.ccs http://example.com/style.css"
-    manni|igor|lovelace|xcode|vim|\
+     manni|igor|lovelace|xcode|vim|\
     autum|abap|vs|rrt|native|perldoc|\
     borland|tango|emacs|friendly|\
     monokai|paraiso-dark|colorful|\
@@ -409,12 +438,9 @@ do
     algol_nu|paraiso-light|trac|default|algol|fruity)
         csscode="$csscode$(${PYGMENTIZE} -S $i -f html)"
         ;;
-# You use a style own provenience too
-# as HTTP link to stylesheet, or
     http*) csscode="""$csscode@import url($i);
     """
         ;;
-# include content from external CSS stylesheets.
     *) case "${i}" in
             /*) if [ -f "${i}" ] ; then
                     csscode="$csscode$(cat ${i})"
@@ -430,9 +456,7 @@ do
         ;;
     esac
 done
-#
-# [ja]: http://github.com/jashkenas/
-# [do]: http://jashkenas.github.com/docco/
+
 layout () {
     cat <<HTML
 <!DOCTYPE html>
@@ -440,7 +464,6 @@ layout () {
 <head>
     <meta http-equiv='content-type' content='text/html;charset=utf-8'>
     <title>$1</title>
-    <link rel=stylesheet href="${css}">
     <style>
 ${csscode}
     </style>
