@@ -12,7 +12,7 @@ include config.mk
 
 sourcedir = .
 PROGRAMS = shocco
-DOCS = shocco.html index.html
+DOCS = shocco.html
 DISTFILES = config.mk config.sh
 
 all:: sup build
@@ -38,9 +38,9 @@ shocco: shocco.sh
 
 doc: shocco.html
 
-shocco.html: shocco shocco.sh
-	./$< $< shocco.sh > shocco.html+
-	mv shocco.html+ $@
+shocco.html: shocco
+	./shocco shocco.sh > shocco.html+
+	mv shocco.html+ shocco.html
 
 install-markdown:
 	mkdir -p "$(bindir)"
@@ -55,7 +55,7 @@ install: shocco $(INSTALL_PREREQUISITES)
 read: sup doc
 	$(BROWSER) ./shocco.html
 
-clean:
+clean: distclean
 	rm -f $(PROGRAMS) $(DOCS)
 
 distclean: clean

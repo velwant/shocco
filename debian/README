@@ -1,0 +1,20 @@
+The Debian Package shocco
+-------------------------
+
+Download from git:
+
+  ~$ git clone http://git.thewoodcraft.org/shocco
+
+Building deb package:
+  ~$ cd shocco
+  ~/shooco$ debuild
+   ...
+
+Clean git repository:
+  ~/shocco$ make clean
+  ~/shocco$ debian/rules clean
+
+Install package:
+  ~/shocco$ dpkg -i ../shocco*deb
+
+ -- Aleš Kapica< ales@kapica.cz>  Wed, 06 Sep 2017 11:33:31 +0200

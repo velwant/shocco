@@ -1,0 +1,16 @@
+Source: shocco
+Section: utils
+Priority: extra
+Maintainer: Ales¡ Kapica <ales@kapica.cz>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.3
+Homepage: http://git.thewoodcraft.org/shocco
+Vcs-Git: git://github.com/velwant/shocco.git
+Vcs-Browser: https://github.com/velwant/shocco
+
+Package: shocco
+Architecture: any
+Depends: python-pygments, python-docutils, markdown
+Description: Shocco is a documentation generator
+ written for and in POSIX shell. It borrows liberally from Docco,
+ the original Q&D literate-programming-style doc generator.

@@ -10,9 +10,9 @@
     style documentation generator for / in POSIX shell.
     See the shocco generated docs for more information:
 
-         <https://github.com/velwant/shocco/>
+         <http://git.thewoodcraft.org/shocco/>
 
-         original repository with help page:
+          help page from original repository:
 
          <http://rtomayko.github.com/shocco/>
 
@@ -42,8 +42,6 @@
                      C O P Y I N G
 
 
-          This is MIT licensed Free Software
+     This is MIT and GPL-3.0+ licensed Free Software
 
-                 Copyright (C) 2010 by
-                     Ryan Tomayko
-              <http://tomayko.com/about>
+  Copyright (C) 2010, Ryan Tomayko <http://tomayko.com/about>

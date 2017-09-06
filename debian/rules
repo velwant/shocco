@@ -1,0 +1,28 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+export DH_VERBOSE=1
+#DISTRIBUTION = $(shell lsb_release -sr)
+#VERSION = 1.0
+#PACKAGEVERSION = $(VERSION)-0~$(DISTRIBUTION)0
+#TARBALL = shocco-$(VERSION).tar.gz
+
+
+%:
+	dh $@
+
+##	configure --prefix=/usr
+override_dh_auto_clean:
+##override_dh_auto_test:
+##override_dh_auto_build:
+override_dh_auto_install:
+	./configure --prefix=/usr
+	make
+	make doc
+#	make install DESTDIR=debian/shocco
+
+#override_dh_gencontrol:
+#	dh_gencontrol -- -v$(PACKAGEVERSION)
+# Skip the tests, we can't login into the local sshd in pbuilder
+#override_dh_auto_test:

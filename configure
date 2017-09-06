@@ -42,6 +42,13 @@ do
     # Installation locations:
     --prefix)          prefix="$2";shift;shift;;
     --prefix=*)        prefix="$(longarg "$1" --prefix)";shift;;
+    --build=*)         shift;;
+    --includedir=*)    shift;;
+    --infodir=*)       shift;;
+    --libdir=*)        shift;;
+    --disable-silent-rules) shift ;;
+    --disable-maintainer-mode) shift ;;
+    --disable-dependency-tracking) shift ;;
     --bindir)          bindir="$2";shift;shift;;
     --bindir=*)        bindir="$(longarg "$1" --bindir)";shift;;
     --libexecdir)      libexecdir="$2";shift;shift;;
